@@ -2,49 +2,62 @@
 #include <math.h>
 #define TOL 0.0001
 
-
-double f(double x) {
-    return x * x * x - 2*x*x - 3;  
+double f(double x)
+{
+    return x * x * x - 2 * x * x - 3;
 }
 
-double bisection(double a , double b) {
-    double c;
+double absoluteRelativeError(double a, double b)
+{
+    return fabs((b - a) / b) * 100;
+}
+
+double bisection(double a, double b)
+{
+    double c, c_prev, error;
     int i = 0;
 
-    while (f(a) * f(b) >= 0) {
+    if (f(a) * f(b) >= 0)
+    {
 
-        // printf("f(a) = %.4lf, f(b) = %.4lf\n", f(a), f(b));
-        // printf("Assumed a and b are in correct!\n");
-        a++;
-        b++;  
+        printf("f(a) = %.4lf, f(b) = %.4lf\n", f(a), f(b));
+        printf("Assumed a and b are in correct!\n");
+        return 1;
     }
 
-    printf("Iteration a\t b\t c\t f(c)\n");
+    printf("Iteration a\t b\t c\t f(c)\t  Error\n");
 
-    while ((b - a) / 2 > TOL ) {
+    do
+    {
         c = (a + b) / 2;
 
-                printf("%d\t%.4lf\t%.4lf\t%.4lf\t%.4lf\n", i+1, a, b, c, f(c));
+     error = absoluteRelativeError(a, b);
 
-        if (fabs(f(c)) < TOL) {
-            return c;  
-        }
 
-        if (f(a) * f(c) < 0) {
+        printf("%d\t%.4lf\t%.4lf\t%.4lf\t%.4lf\t%.4lf\n", i + 1, a, b, c, f(c),error);
+
+
+        if (f(a) * f(c) < 0)
+        {
             b = c;
-        } else {
+        }
+        else
+        {
             a = c;
         }
-        i++;
-    } 
+        c_prev = c;
 
-    return c;  
+        i++;
+    } while (error > TOL);
+
+    return c;
 }
 
-int main() {
+int main()
+{
     double a, b, root;
-    a = 1;
-    b = 2;
+    a = 2;
+    b = 3;
 
     root = bisection(a, b);
 
